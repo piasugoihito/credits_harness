@@ -1,0 +1,35 @@
+{
+  "_status": "DRAFT。確認済みは semesters のみ(公式ページの検索結果より、要原典確認)。modules / no_class_dates / weekday_overrides は公式学年暦から転記が必要。日付を推測で埋めないこと。",
+  "academic_year": 2026,
+  "timezone": "Asia/Tokyo",
+  "campus": "tsukuba",
+  "source_urls": [
+    "https://www.tsukuba.ac.jp/campuslife/calendar-school/"
+  ],
+  "semesters": {
+    "spring": {"classes_start": "2026-04-14", "classes_end": "2026-08-06"},
+    "fall":   {"classes_start": "2026-10-01", "classes_end": "2027-02-15"}
+  },
+  "modules": {
+    "春A": {"start": null, "end": null},
+    "春B": {"start": null, "end": null},
+    "春C": {"start": null, "end": null},
+    "夏休": {"start": null, "end": null},
+    "秋A": {"start": "2026-10-01", "end": null, "_note": "秋学期授業開始=秋A開始(過去年度の学年暦の傾向)。endは要転記"},
+    "秋B": {"start": null, "end": null},
+    "秋C": {"start": null, "end": null},
+    "春休": {"start": null, "end": null}
+  },
+  "no_class_dates": [
+    {"date": null, "note": "祝日・学園祭・スポーツデー・期末試験日など。要転記"}
+  ],
+  "weekday_overrides": [
+    {"date": null, "acts_as_weekday": null, "note": "例: 『◯日は月曜日の授業を実施』(振替)。過去年度の学年暦に同種の記載あり。要転記"}
+  ],
+  "_reference_2025_module_pattern": {
+    "_note": "2025年度履修要覧の値。年度ごとに変わるので2026年度には流用しない。構造の理解用。",
+    "秋A": ["2025-10-01", "2025-11-07"],
+    "秋B": ["2025-11-11", "2025-12-19"],
+    "秋C": ["2026-01-05", "2026-02-12"]
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "tabs": [
+    {
+      "label": "春A",
+      "selected": false
+    },
+    {
+      "label": "春B",
+      "selected": false
+    },
+    {
+      "label": "春C",
+      "selected": false
+    },
+    {
+      "label": "夏休",
+      "selected": false
+    },
+    {
+      "label": "秋A",
+      "selected": true
+    },
+    {
+      "label": "秋B",
+      "selected": false
+    },
+    {
+      "label": "秋C",
+      "selected": false
+    },
+    {
+      "label": "春休",
+      "selected": false
+    }
+  ],
+  "slots": [
+    {
+      "day": "月",
+      "day_index": 1,
+      "period": 1,
+      "code": "ZZ10001",
+      "name": "サンプル科目α",
+      "teacher": "教員 甲",
+      "year": "2026"
+    },
+    {
+      "day": "月",
+      "day_index": 1,
+      "period": 2,
+      "code": "ZZ10001",
+      "name": "サンプル科目α",
+      "teacher": "教員 甲",
+      "year": "2026"
+    },
+    {
+      "day": "火",
+      "day_index": 2,
+      "period": 1,
+      "code": "ZZ10002",
+      "name": "サンプル科目β(演習)",
+      "teacher": "教員 乙",
+      "year": "2026"
+    },
+    {
+      "day": "火",
+      "day_index": 2,
+      "period": 2,
+      "code": "ZZ10002",
+      "name": "サンプル科目β(演習)",
+      "teacher": "教員 乙",
+      "year": "2026"
+    },
+    {
+      "day": "水",
+      "day_index": 3,
+      "period": 3,
+      "code": "ZZ10003",
+      "name": "サンプル科目γ―特別講義―",
+      "teacher": "教員 丙、教員 丁",
+      "year": "2026"
+    },
+    {
+      "day": "水",
+      "day_index": 3,
+      "period": 4,
+      "code": "ZZ10003",
+      "name": "サンプル科目γ―特別講義―",
+      "teacher": "教員 丙、教員 丁",
+      "year": "2026"
+    },
+    {
+      "day": "木",
+      "day_index": 4,
+      "period": 5,
+      "code": "ZZ10004",
+      "name": "サンプル科目δ",
+      "teacher": "教員 戊",
+      "year": "2026"
+    },
+    {
+      "day": "木",
+      "day_index": 4,
+      "period": 6,
+      "code": "ZZ10004",
+      "name": "サンプル科目δ",
+      "teacher": "教員 戊",
+      "year": "2026"
+    },
+    {
+      "day": "金",
+      "day_index": 5,
+      "period": 2,
+      "code": "ZZ10005",
+      "name": "サンプル科目ε",
+      "teacher": "教員 己",
+      "year": "2026"
+    },
+    {
+      "day": "金",
+      "day_index": 5,
+      "period": 5,
+      "code": "ZZ10005",
+      "name": "サンプル科目ε",
+      "teacher": "教員 己",
+      "year": "2026"
+    }
+  ]
+}

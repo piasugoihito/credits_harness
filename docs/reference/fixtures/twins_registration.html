@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>FIXTURE: TWINS 履修登録・登録状況照会 (架空データ)</title></head>
+<body>
+<!-- 合成フィクスチャ: 実サイトのDOM構造を模した架空データ。実データは絶対にコミットしないこと。 -->
+<table border="0" cellspacing="0" cellpadding="0" height="20" id="auto-table-2-1" class="auto-table-2-1 inner-table sp-table-scroll"><tbody><tr class="inner-table"><td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="春Aを表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=1&amp;gakkiKbnCode=A" class="auto-a-x">春A</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="春Bを表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=2&amp;gakkiKbnCode=A" class="auto-a-x">春B</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="春Cを表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=3&amp;gakkiKbnCode=A" class="auto-a-x">春C</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="夏休を表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=A&amp;gakkiKbnCode=A" class="auto-a-x">夏休</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab-sel inner-table" title="秋Aを表示しています">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                秋A
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="秋Bを表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=5&amp;gakkiKbnCode=B" class="auto-a-x">秋B</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="秋Cを表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=6&amp;gakkiKbnCode=B" class="auto-a-x">秋C</a>
+              </td>
+<td width="80" height="20" align="center" background="/campusweb//theme/default/image/rs_tab_new.png" class="rishu-tab inner-table" title="春休を表示します">
+                <img src="/campusweb//theme/default/image/space.gif" height="2" width="1">
+                <a href="/campusweb/campussquare.do?_flowExecutionKey=_cDUMMY_kDUMMY&amp;_eventId=search&amp;moduleCode=B&amp;gakkiKbnCode=B" class="auto-a-x">春休</a>
+              </td><td width="240" align="right" nowrap="" class="inner-table"><a href="" onclick="return OtherInputCall();">集中/その他の科目登録</a></td></tr></tbody></table>
+<table border="0" cellspacing="1" cellpadding="0" class="rishu-koma auto-table-2-2 inner-table outer-table sp-table-none" id="auto-table-2-2"><tbody><tr class="inner-table"><td width="40" height="20" class="rishu-koma-head inner-table"></td><td width="140" align="center" class="rishu-koma-head inner-table">月曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">火曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">水曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">木曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">金曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">土曜日</td><td width="140" align="center" class="rishu-koma-head inner-table">日曜日</td></tr><tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">1限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10001','1','1')">
+                          ZZ10001
+                        </a><br>
+                        サンプル科目α<br>
+                        教員 甲
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10002','2','1')">
+                          ZZ10002
+                        </a><br>
+                        サンプル科目β(演習)<br>
+                        教員 乙
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('3','1')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('3','1')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('4','1')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('4','1')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('5','1')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('5','1')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','1')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','1')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','1')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','1')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr>
+<tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">2限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10001','1','2')">
+                          ZZ10001
+                        </a><br>
+                        サンプル科目α<br>
+                        教員 甲
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10002','2','2')">
+                          ZZ10002
+                        </a><br>
+                        サンプル科目β(演習)<br>
+                        教員 乙
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('3','2')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('3','2')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('4','2')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('4','2')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10005','5','2')">
+                          ZZ10005
+                        </a><br>
+                        サンプル科目ε<br>
+                        教員 己
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','2')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','2')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','2')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','2')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr>
+<tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">3限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('1','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('1','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('2','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('2','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffffcc" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10003','3','3')">
+                          ZZ10003
+                        </a><br>
+                        サンプル科目γ―特別講義―<br>
+                        教員 丙<br>
+                        教員 丁
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('4','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('4','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('5','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('5','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','3')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','3')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr>
+<tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">4限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('1','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('1','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('2','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('2','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffffcc" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10003','3','4')">
+                          ZZ10003
+                        </a><br>
+                        サンプル科目γ―特別講義―<br>
+                        教員 丙<br>
+                        教員 丁
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('4','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('4','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('5','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('5','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','4')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','4')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr>
+<tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">5限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('1','5')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('1','5')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('2','5')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('2','5')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('3','5')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('3','5')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffffcc" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10004','4','5')">
+                          ZZ10004
+                        </a><br>
+                        サンプル科目δ<br>
+                        教員 戊
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffcc99" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10005','5','5')">
+                          ZZ10005
+                        </a><br>
+                        サンプル科目ε<br>
+                        教員 己
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','5')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','5')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','5')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','5')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr>
+<tr class="inner-table outer-table"><td width="40" height="80" align="center" class="rishu-koma-head inner-table outer-table">
+              <table border="0" width="40" cellspacing="0" cellpadding="2"><tbody><tr class="inner-table"><td width="40" align="center" class="rishu-koma-head inner-table">6限</td></tr></tbody></table>
+            </td>
+            <!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('1','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('1','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('2','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('2','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('3','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('3','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録ありのとき -->
+              <td width="140" valign="top" bgcolor="#ffffcc" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return DeleteCallA('2026','25','ZZ10004','4','6')">
+                          ZZ10004
+                        </a><br>
+                        サンプル科目δ<br>
+                        教員 戊
+                        <!-- シラバスURLの有無で表示切替(シラバスへのリンク)(開始) -->
+                            <br>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('5','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('5','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('6','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('6','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+<!-- 履修登録なしのとき -->
+              <td width="140" valign="top" bgcolor="#dddddd" onclick="return InputCall('7','6')" class="inner-table outer-table">
+                <table border="0" width="140" height="100%" cellspacing="0" cellpadding="2" class="rishu-koma-inner inner-table sp-table-none">
+                  <tbody><tr class="inner-table"><td width="140" valign="top" class="inner-table">
+                      <a href="" onclick="return InputCallA('7','6')">未登録</a>
+                  </td></tr></tbody></table>
+              </td>
+          </tr></tbody></table>
+</body></html>

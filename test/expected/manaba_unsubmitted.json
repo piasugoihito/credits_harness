@@ -1,0 +1,42 @@
+[
+  {
+    "id": "course_1000003_report_9000004",
+    "type": "レポート",
+    "title": "第７週レポート（サンプル）",
+    "url": "https://manaba.tsukuba.ac.jp/ct/course_1000003_report_9000004",
+    "course": "サンプル演習",
+    "course_url": "https://manaba.tsukuba.ac.jp/ct/course_1000003",
+    "start": "2026-06-02 16:00",
+    "due": "2026-06-09 16:00"
+  },
+  {
+    "id": "course_1000001_survey_9000001",
+    "type": "アンケート",
+    "title": "[サンプル]面談日程アンケート",
+    "url": "https://manaba.tsukuba.ac.jp/ct/course_1000001_survey_9000001",
+    "course": "【サンプル学類】お知らせ用",
+    "course_url": "https://manaba.tsukuba.ac.jp/ct/course_1000001",
+    "start": "2026-08-06 09:00",
+    "due": "2026-10-01 00:00"
+  },
+  {
+    "id": "course_1000002_drill_9000002",
+    "type": "ドリル",
+    "title": "Sample Drill & Quiz",
+    "url": "https://manaba.tsukuba.ac.jp/ct/course_1000002_drill_9000002",
+    "course": "サンプル倫理コース",
+    "course_url": "https://manaba.tsukuba.ac.jp/ct/course_1000002",
+    "start": "2026-04-01 00:00",
+    "due": null
+  },
+  {
+    "id": "course_1000002_drill_9000003",
+    "type": "外部教材",
+    "title": "サンプル修了テスト1",
+    "url": "https://manaba.tsukuba.ac.jp/ct/course_1000002_drill_9000003",
+    "course": "サンプル倫理コース",
+    "course_url": "https://manaba.tsukuba.ac.jp/ct/course_1000002",
+    "start": "2026-04-01 00:00",
+    "due": null
+  }
+]
