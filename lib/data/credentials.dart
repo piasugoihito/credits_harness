@@ -26,6 +26,9 @@ class CredentialStore {
           secure ??
           const FlutterSecureStorage(
             iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
+            // macOS: 従来のログインキーチェーンを使う(データ保護キーチェーンは有料の開発者登録と
+            // プロビジョニングが必要で、作ったMac以外で起動できなくなるため)
+            mOptions: MacOsOptions(usesDataProtectionKeychain: false),
           );
 
   Future<Credentials?> read() async {

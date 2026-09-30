@@ -46,6 +46,11 @@ class Notifier {
           requestBadgePermission: false,
           requestSoundPermission: false,
         ),
+        macOS: DarwinInitializationSettings(
+          requestAlertPermission: false,
+          requestBadgePermission: false,
+          requestSoundPermission: false,
+        ),
       ),
       onDidReceiveNotificationResponse: (r) => onTap?.call(r.payload),
     );
@@ -61,7 +66,12 @@ class Notifier {
 
   tz.TZDateTime now() => tz.TZDateTime.now(jst);
 
+  MacOSFlutterLocalNotificationsPlugin? get _macos =>
+      _plugin.resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>();
+
   Future<PermissionStatus> status() async {
+    // macOS: 正確なアラームの概念は無い(通知の許可だけ)
+    if (Platform.isMacOS) return PermissionStatus((await _macos?.checkPermissions())?.isEnabled ?? false, true);
     if (!Platform.isAndroid) return const PermissionStatus(true, true);
     return PermissionStatus(
       await _android?.areNotificationsEnabled() ?? false,
@@ -76,6 +86,8 @@ class Notifier {
       if (exactAlarms && !(await _android?.canScheduleExactNotifications() ?? false)) {
         await _android?.requestExactAlarmsPermission();
       }
+    } else if (Platform.isMacOS) {
+      await _macos?.requestPermissions(alert: true, sound: true);
     } else {
       await _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
         alert: true,
@@ -95,6 +107,7 @@ class Notifier {
       category: AndroidNotificationCategory.reminder,
     ),
     iOS: const DarwinNotificationDetails(),
+    macOS: const DarwinNotificationDetails(),
   );
 
   Future<AndroidScheduleMode> _mode() async => (await _android?.canScheduleExactNotifications() ?? false)
