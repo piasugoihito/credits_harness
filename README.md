@@ -19,6 +19,13 @@
 
 データはそのブラウザの中にだけ保存されます(通知機能はありません)。
 
+### Mac(アプリ)
+1. [Releases](https://github.com/piasugoihito/credits_harness/releases) から `tanni-harness-macos.zip` をダウンロードして展開し、「単位ハーネス」をアプリケーションフォルダへ移動
+2. 開くと「開発元を確認できません」と出るので、**システム設定 → プライバシーとセキュリティ → 「このまま開く」** で許可(初回のみ)
+3. 初回セットアップで学籍番号・パスワード(Mac のキーチェーンにのみ保存)を登録
+
+macOS 12 以上(Intel / Apple Silicon)。Android 版と同じく、授業開始前に通知します。
+
 ### Android(アプリ)
 1. [Releases](https://github.com/piasugoihito/credits_harness/releases) から `app-release.apk` をダウンロード
 2. 「提供元不明のアプリ」のインストールを許可してインストール
