@@ -141,6 +141,19 @@ class Store {
   Future<void> saveAssignments(List<Assignment> items) =>
       _p.setString('assignments', jsonEncode(items.map((a) => a.toJson()).toList()));
 
+  // ---- 教室(自動取得: kdb_ja.xlsx / 手動設定)
+  Map<String, String> loadRooms({required bool manual}) {
+    final raw = _p.getString(manual ? 'rooms_manual' : 'rooms_auto');
+    return raw == null ? {} : (jsonDecode(raw) as Map).cast<String, String>();
+  }
+
+  Future<void> saveRooms(Map<String, String> rooms, {required bool manual}) =>
+      _p.setString(manual ? 'rooms_manual' : 'rooms_auto', jsonEncode(rooms));
+
+  DateTime? loadRoomsFetchedAt() => DateTime.tryParse(_p.getString('rooms_fetched_at') ?? '');
+
+  Future<void> saveRoomsFetchedAt(DateTime t) => _p.setString('rooms_fetched_at', t.toIso8601String());
+
   // ---- 同期状態
   SyncState loadSync(Source s) {
     final raw = _p.getString('sync_${s.name}');
@@ -151,7 +164,15 @@ class Store {
 
   /// 取得データ・同期状態を消す(設定は残す)。
   Future<void> clearData() async {
-    for (final k in ['timetable', 'twins_current_module', 'assignments', 'sync_twins', 'sync_manaba']) {
+    for (final k in [
+      'timetable',
+      'twins_current_module',
+      'assignments',
+      'sync_twins',
+      'sync_manaba',
+      'rooms_auto',
+      'rooms_fetched_at',
+    ]) {
       await _p.remove(k);
     }
   }

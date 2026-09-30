@@ -143,6 +143,19 @@ void main() {
       expect(plan.single.payload, 'A');
     });
 
+    test('教室が分かれば本文に付ける', () {
+      final plan = planNotifications(
+        now: at(2030, 6, 3, 0, 0),
+        leadMinutes: 10,
+        windowDays: 0,
+        cal: cal,
+        slotsByModule: slots,
+        times: times,
+        rooms: {'A': '3A204'},
+      );
+      expect(plan.single.body, '10分後 08:40 開始（1・2限） 3A204');
+    });
+
     test('発火時刻が過ぎたものは除外(境界含む)', () {
       List<PlannedNotification> p(tz.TZDateTime now) =>
           planNotifications(now: now, leadMinutes: 10, windowDays: 0, cal: cal, slotsByModule: slots, times: times);

@@ -25,6 +25,9 @@ class ScheduleTab extends StatelessWidget {
       onRefresh: () => app.refresh(manaba: false),
       banner: StatusBanner(app: app, source: Source.twins),
       emptyText: '時間割がまだありません。\n下に引いて更新してください。',
+      onFetchRooms: app.refreshing ? null : app.fetchRooms,
+      roomsFetching: app.roomsFetching,
+      roomsError: app.roomsError,
       actions: [
         if (app.refreshingSource == Source.twins)
           const Padding(

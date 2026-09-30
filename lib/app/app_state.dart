@@ -15,10 +15,12 @@ import '../core/models.dart';
 import '../data/credentials.dart';
 import '../data/store.dart';
 import '../notify/notifier.dart';
-import '../scraper/scrapers.dart';
+import '../scraper/scrapers.dart' hide fetchRooms;
+import '../scraper/scrapers.dart' as scrapers show fetchRooms;
 import '../scraper/web_session.dart';
 
-class AppState extends ChangeNotifier implements CoursesModel {
+class AppState extends ChangeNotifier with RoomsState implements CoursesModel {
+  @override
   final Store store;
   final CredentialStore credentials;
   @override
@@ -155,6 +157,50 @@ class AppState extends ChangeNotifier implements CoursesModel {
     notifyListeners();
   }
 
+  // ------------------------------------------------------------------ 教室
+
+  bool roomsFetching = false;
+  String? roomsError;
+
+  /// kdb_ja.xlsx から教室を取得する(利用者のボタン操作でのみ)。失敗しても既存の教室は消さない。
+  Future<void> fetchRooms() async {
+    if (roomsFetching || refreshing) return;
+    final codes = courseCodes;
+    if (codes.isEmpty) {
+      roomsError = '先に時間割を取得してください';
+      notifyListeners();
+      return;
+    }
+    roomsFetching = true;
+    roomsError = null;
+    notifyListeners();
+    try {
+      await saveAutoRooms(await scrapers.fetchRooms(credentials, codes, log: _log));
+    } on ScrapeException catch (e) {
+      _log('✖ 教室 [${e.kind.name}] ${e.message}');
+      roomsError = e.message;
+    } catch (e) {
+      _log('✖ 教室 予期しないエラー: ${e.runtimeType}');
+      roomsError = '予期しないエラー(${e.runtimeType})';
+    } finally {
+      roomsFetching = false;
+      autofillFailed = await credentials.autofillFailed();
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<void> saveAutoRooms(Map<String, String> rooms) async {
+    await super.saveAutoRooms(rooms);
+    await reschedule(); // 通知の本文に教室が入るため
+  }
+
+  @override
+  Future<void> setManualRoom(String code, String? room) async {
+    await super.setManualRoom(code, room);
+    await reschedule();
+  }
+
   // ------------------------------------------------------------------ 通知
 
   /// 常に全キャンセル → 全登録。通知オフなら全キャンセルのみ。戻り値: 予約件数。
@@ -169,6 +215,7 @@ class AppState extends ChangeNotifier implements CoursesModel {
       cal: FixedModule(currentModule),
       slotsByModule: timetable,
       times: times,
+      rooms: rooms,
     );
     await notifier.applyPlan(plan);
     _log('通知を${plan.length}件予約(${currentModule ?? 'モジュール不明'})');
@@ -225,6 +272,8 @@ class AppState extends ChangeNotifier implements CoursesModel {
     manabaSync = const SyncState();
     hasCredentials = false;
     autofillFailed = false;
+    resetRooms();
+    roomsError = null;
     log.clear();
     notifyListeners();
   }

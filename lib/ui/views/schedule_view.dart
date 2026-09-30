@@ -15,6 +15,11 @@ class ScheduleView extends StatefulWidget {
   final Widget? banner;
   final String emptyText;
 
+  /// 教室が未取得のときに出す「教室を取得」ボタンの動作(null なら出さない)。
+  final VoidCallback? onFetchRooms;
+  final bool roomsFetching;
+  final String? roomsError;
+
   const ScheduleView({
     super.key,
     required this.model,
@@ -23,6 +28,9 @@ class ScheduleView extends StatefulWidget {
     this.actions = const [],
     this.banner,
     this.emptyText = '時間割がまだありません。',
+    this.onFetchRooms,
+    this.roomsFetching = false,
+    this.roomsError,
   });
 
   @override
@@ -48,6 +56,8 @@ class _ScheduleViewState extends State<ScheduleView> {
       padding: const EdgeInsets.only(bottom: 24),
       children: [
         ?widget.banner,
+        if (widget.onFetchRooms != null && modules.isNotEmpty && model.roomsFetchedAt == null)
+          _RoomsCard(onFetch: widget.onFetchRooms!, fetching: widget.roomsFetching, error: widget.roomsError),
         if (viewing == current && modules.isNotEmpty) TodayCard(model: model, onTapCourse: widget.onTapCourse),
         if (modules.isEmpty)
           Padding(
@@ -134,6 +144,50 @@ class _ModuleChip extends StatelessWidget {
   }
 }
 
+class _RoomsCard extends StatelessWidget {
+  final VoidCallback onFetch;
+  final bool fetching;
+  final String? error;
+  const _RoomsCard({required this.onFetch, required this.fetching, this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
+        child: Row(
+          children: [
+            const Icon(Icons.meeting_room_outlined),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('教室が未取得です', style: t.titleSmall),
+                  Text(
+                    error ?? 'TWINS の科目一覧(kdb_ja.xlsx)から、履修中の科目の教室を読み込みます',
+                    style: t.bodySmall?.copyWith(color: error == null ? cs.onSurfaceVariant : cs.error),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            fetching
+                ? const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                  )
+                : FilledButton.tonal(onPressed: onFetch, child: const Text('教室を取得')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class TodayCard extends StatelessWidget {
   final CoursesModel model;
   final void Function(BuildContext context, String code) onTapCourse;
@@ -178,7 +232,14 @@ class TodayCard extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: Text(b.name, style: t.bodyLarge, overflow: TextOverflow.ellipsis),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(b.name, style: t.bodyLarge, overflow: TextOverflow.ellipsis),
+                              if (model.roomOf(b.code) case final room?)
+                                Text(room, style: t.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                            ],
+                          ),
                         ),
                         Text(b.periodLabel, style: t.bodySmall),
                       ],
@@ -251,9 +312,16 @@ class TimetableGrid extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    s.code,
-                    style: t.labelSmall?.copyWith(fontSize: 9, color: cs.onPrimaryContainer.withValues(alpha: 0.7)),
+                    model.roomOf(s.code) ?? s.code,
+                    style: model.roomOf(s.code) == null
+                        ? t.labelSmall?.copyWith(fontSize: 9, color: cs.onPrimaryContainer.withValues(alpha: 0.7))
+                        : t.labelSmall?.copyWith(
+                            fontSize: 10,
+                            color: cs.onPrimaryContainer,
+                            fontWeight: FontWeight.w600,
+                          ),
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

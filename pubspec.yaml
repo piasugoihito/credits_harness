@@ -1,7 +1,7 @@
 name: credits_harness
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ^3.13.1
@@ -19,6 +19,7 @@ dependencies:
   timezone: ^0.11.1
   url_launcher: ^6.3.2
   web: ^1.1.1
+  xml: ^7.1.0
 
 dev_dependencies:
   flutter_test:

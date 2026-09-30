@@ -10,8 +10,9 @@ import '../data/credentials.dart';
 import '../data/store.dart';
 import '../m0/spike_page.dart';
 import '../notify/notifier.dart';
+import 'format.dart';
 
-const appVersion = '0.1.0';
+const appVersion = '0.2.0';
 
 const disclaimerText =
     '本アプリは筑波大学とは無関係の非公式アプリです。利用は自己責任でお願いします。'
@@ -166,6 +167,23 @@ class _SettingsTabState extends State<SettingsTab> with WidgetsBindingObserver {
               ],
             ),
           ),
+
+          const _Header('教室'),
+          ListTile(
+            leading: const Icon(Icons.meeting_room_outlined),
+            title: Text(app.roomsFetchedAt == null ? '教室を取得' : '教室を再取得'),
+            subtitle: Text(
+              app.roomsFetching
+                  ? '取得中…'
+                  : app.roomsError ??
+                        (app.roomsFetchedAt == null
+                            ? 'TWINS の科目一覧(kdb_ja.xlsx)から読み込みます'
+                            : '前回: ${formatUpdatedAt(app.roomsFetchedAt)}(${app.autoRooms.length}科目)。手動で設定した教室はそのまま'),
+            ),
+            enabled: !app.roomsFetching && !app.refreshing && app.hasCredentials,
+            onTap: app.fetchRooms,
+          ),
+          const ListTile(dense: true, leading: SizedBox(width: 24), title: Text('個別の教室は、日程タブで科目をタップして「教室を編集」から設定できます')),
 
           const _Header('データ更新'),
           SwitchListTile(

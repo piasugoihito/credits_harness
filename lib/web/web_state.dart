@@ -14,7 +14,8 @@ import '../core/models.dart';
 import '../data/store.dart';
 import 'import_payload.dart';
 
-class WebState extends ChangeNotifier implements CoursesModel {
+class WebState extends ChangeNotifier with RoomsState implements CoursesModel {
+  @override
   final Store store;
   @override
   final PeriodTimes times;
@@ -62,6 +63,13 @@ class WebState extends ChangeNotifier implements CoursesModel {
         twinsSync = now;
         await store.saveTimetable(timetable, twinsCurrentModule);
         await store.saveSync(Source.twins, now);
+        if (autoRooms.length > courseCodes.length) {
+          autoRooms = {
+            for (final c in courseCodes)
+              if (autoRooms[c] != null) c: autoRooms[c]!,
+          };
+          await store.saveRooms(autoRooms, manual: false);
+        }
         notifyListeners();
         final summary = r.slotsByModule.entries
             .where((e) => e.value.isNotEmpty)
@@ -74,6 +82,17 @@ class WebState extends ChangeNotifier implements CoursesModel {
         await store.saveSync(Source.manaba, now);
         notifyListeners();
         return '未提出の課題を取り込みました(${r.items.length}件)';
+      case RoomsImport():
+        // 時間割があれば自分の科目だけ保存する(無ければいったん全部。表示は時間割の科目だけ)
+        final codes = courseCodes;
+        final mine = codes.isEmpty
+            ? r.rooms
+            : {
+                for (final c in codes)
+                  if (r.rooms[c] != null) c: r.rooms[c]!,
+              };
+        await saveAutoRooms(mine);
+        return codes.isEmpty ? '教室を取り込みました(時間割を取り込むと自分の科目に絞られます)' : '教室を取り込みました(${codes.length}科目中 ${mine.length}科目)';
     }
   }
 
@@ -91,6 +110,7 @@ class WebState extends ChangeNotifier implements CoursesModel {
     assignments = [];
     twinsSync = const SyncState();
     manabaSync = const SyncState();
+    resetRooms();
     notifyListeners();
   }
 }

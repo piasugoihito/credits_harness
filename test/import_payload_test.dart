@@ -63,6 +63,22 @@ void main() {
     );
   });
 
+  test('教室: 教室ごとのまとまりを 科目番号→教室 に戻す', () {
+    final r = decodeImport(
+      _encode({
+        'v': 1,
+        'kind': 'rooms',
+        'rooms': {
+          '3A204': ['ZZ10001', 'ZZ10003'],
+          '1H101\n1H102': ['ZZ10002'],
+          '': ['ZZ9'],
+        },
+      }),
+    ) as RoomsImport;
+    expect(r.rooms, {'ZZ10001': '3A204', 'ZZ10003': '3A204', 'ZZ10002': '1H101・1H102'});
+    expect(() => decodeImport(_encode({'v': 1, 'kind': 'rooms', 'rooms': {}})), throwsA(isA<ImportException>()));
+  });
+
   test('URLエンコードされた値も読める', () {
     final v = _encode({'v': 1, 'kind': 'manaba', 'base': '', 'html': manabaTable});
     expect(decodeImport(Uri.encodeComponent(v)), isA<ManabaImport>());

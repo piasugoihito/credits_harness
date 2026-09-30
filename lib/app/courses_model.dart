@@ -20,10 +20,72 @@ abstract interface class CoursesModel implements Listenable {
   SyncState get manabaSync;
   PeriodTimes get times;
   tz.Location get jst;
+
+  /// kdb_ja.xlsx から取得した教室(科目番号 → 教室)と取得日時。未取得なら null。
+  Map<String, String> get autoRooms;
+  DateTime? get roomsFetchedAt;
+
+  /// 利用者が手で設定した教室(自動取得より優先)。
+  Map<String, String> get manualRooms;
+
+  /// 手動の教室を設定する。null または空文字なら手動設定を消して自動取得の値に戻す。
+  Future<void> setManualRoom(String code, String? room);
+}
+
+/// 教室の保持と手動設定(Android・Web 共通)。
+mixin RoomsState on ChangeNotifier implements CoursesModel {
+  Store get store;
+
+  @override
+  late Map<String, String> autoRooms = store.loadRooms(manual: false);
+  @override
+  late Map<String, String> manualRooms = store.loadRooms(manual: true);
+  @override
+  late DateTime? roomsFetchedAt = store.loadRoomsFetchedAt();
+
+  @override
+  Future<void> setManualRoom(String code, String? room) async {
+    final r = room?.trim() ?? '';
+    manualRooms = {...manualRooms};
+    if (r.isEmpty) {
+      manualRooms.remove(code);
+    } else {
+      manualRooms[code] = r;
+    }
+    await store.saveRooms(manualRooms, manual: true);
+    notifyListeners();
+  }
+
+  /// 自動取得した教室を保存する(手動設定は変えない)。
+  Future<void> saveAutoRooms(Map<String, String> rooms) async {
+    autoRooms = rooms;
+    roomsFetchedAt = DateTime.now();
+    await store.saveRooms(rooms, manual: false);
+    await store.saveRoomsFetchedAt(roomsFetchedAt!);
+    notifyListeners();
+  }
+
+  void resetRooms() {
+    autoRooms = {};
+    manualRooms = {};
+    roomsFetchedAt = null;
+  }
 }
 
 extension CoursesModelX on CoursesModel {
   List<String> get modules => timetable.keys.toList();
+
+  /// 表示する教室(手動 > 自動)。分からなければ null。
+  String? roomOf(String code) => manualRooms[code] ?? autoRooms[code];
+
+  /// 表示で使う全科目の教室(手動 > 自動)。
+  Map<String, String> get rooms => {...autoRooms, ...manualRooms};
+
+  /// 時間割にある科目番号の一覧。
+  Set<String> get courseCodes => {
+    for (final xs in timetable.values)
+      for (final s in xs) s.code,
+  };
 
   tz.TZDateTime now() => tz.TZDateTime.now(jst);
 

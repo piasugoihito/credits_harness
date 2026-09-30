@@ -5,6 +5,9 @@ library;
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show compute;
+
+import '../core/kdb_rooms.dart';
 import '../core/models.dart';
 import '../core/parsers.dart';
 import '../data/credentials.dart';
@@ -144,3 +147,56 @@ Future<List<Assignment>> fetchAssignments(CredentialStore store, {required Log l
     await s.dispose();
   }
 }
+
+/// 教室: TWINS「ダウンロード」の kdb_ja.xlsx を取得し、codes の科目の教室を返す(利用者のボタン操作でのみ実行)。
+const _downloadMenuText = 'ダウンロード';
+const kdbXlsxName = 'kdb_ja.xlsx';
+
+/// 「ダウンロード」画面でリンクが見つからないときに使う既知のリンク(fileId は年度で変わる可能性がある)。
+const kdbXlsxFallbackHref = '/campusweb/campussquare.do?_flowId=SDW-filerefer-flow&fileId=1183';
+
+Future<Map<String, String>> fetchRooms(CredentialStore store, Set<String> codes, {required Log log}) async {
+  final s = await WebSession.open(twinsUrl, log: log);
+  try {
+    await ensureLoggedIn(s, "!!document.querySelector('span.menunm')", store);
+    final linkJs =
+        "!!Array.from(document.querySelectorAll('a')).find((a) => a.textContent.trim() === ${jsonEncode(kdbXlsxName)})";
+    final opened = await s.clickAndWait('TS.clickMenu(${jsonEncode(_downloadMenuText)})', linkJs);
+    log('教室: 「ダウンロード」画面 ${opened ? '開けた' : '開けない(既知のリンクで試す)'}');
+
+    // ページ内で(ログイン中のセッションのまま) xlsx を GET し、base64 で受け取る
+    final r = await s.jsAsync(
+      r"""
+      const a = Array.from(document.querySelectorAll('a')).find((x) => x.textContent.trim() === name);
+      const href = a ? a.getAttribute('href') : fallback;
+      const u = new URL(href, location.href);
+      if (u.origin !== location.origin) return { error: 'other-origin' };
+      const res = await fetch(u.href, { credentials: 'include' });
+      const buf = new Uint8Array(await res.arrayBuffer());
+      if (buf.length < 4 || buf[0] !== 0x50 || buf[1] !== 0x4b) {
+        return { error: 'not-xlsx', status: res.status, type: res.headers.get('content-type') };
+      }
+      let bin = '';
+      for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+      return { b64: btoa(bin), size: buf.length, fromLink: !!a };
+    """,
+      arguments: {'name': kdbXlsxName, 'fallback': kdbXlsxFallbackHref},
+    );
+
+    final m = (r as Map?) ?? const {};
+    if (m['b64'] == null) {
+      throw ScrapeException(FailureKind.structureChanged, '$kdbXlsxName を取得できませんでした(${m['error'] ?? '不明'})');
+    }
+    final bytes = base64.decode(m['b64'] as String);
+    log('教室: $kdbXlsxName ${(bytes.length / 1024).round()}KB(${m['fromLink'] == true ? '画面のリンク' : '既知のリンク'})');
+    final rooms = await compute(_parseRooms, (bytes, codes));
+    log('教室: ${codes.length}科目中 ${rooms.length}科目の教室が分かりました');
+    return rooms;
+  } on FormatException catch (e) {
+    throw ScrapeException(FailureKind.structureChanged, '$kdbXlsxName を読めませんでした(${e.message})');
+  } finally {
+    await s.dispose();
+  }
+}
+
+Map<String, String> _parseRooms((List<int>, Set<String>) a) => parseKdbRooms(a.$1, codes: a.$2);

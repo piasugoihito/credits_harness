@@ -135,6 +135,17 @@ class WebSession {
     return _ctl.evaluateJavascript(source: 'if (!window.TS) { $snippets }\n$expression');
   }
 
+  /// 非同期 JS(関数本体。await 可)を許可ドメイン上でのみ実行し、戻り値を返す。
+  Future<dynamic> jsAsync(String functionBody, {Map<String, dynamic> arguments = const {}}) async {
+    final url = await currentUrl();
+    if (!isAllowedUrl(url)) {
+      throw ScrapeException(FailureKind.blockedHost, '許可ドメイン外のページでJSを実行しようとしました: ${url?.host}');
+    }
+    final r = await _ctl.callAsyncJavaScript(functionBody: functionBody, arguments: arguments);
+    if (r?.error != null) throw ScrapeException(FailureKind.structureChanged, 'JSの実行に失敗しました');
+    return r?.value;
+  }
+
   Future<void> loadUrl(Uri url) async {
     if (!isAllowedUrl(url)) throw ScrapeException(FailureKind.blockedHost, '許可されていないURL: ${url.host}');
     await _markDocument();

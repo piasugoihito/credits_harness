@@ -79,6 +79,11 @@ class _WebHomeState extends State<WebHome> {
               onTapCourse: (ctx, code) =>
                   showCourseSheet(ctx, s, code, openSyllabus: _openSyllabus, syllabusLabel: 'KdBでシラバスを探す(科目番号をコピー)'),
               emptyText: '時間割がまだありません。\n「取り込み」タブの手順で TWINS から取り込んでください。',
+              onFetchRooms: () {
+                setState(() => _tab = 2);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('「教室を取り込む」の手順で、TWINS の「ダウンロード」画面からブックマークを実行してください')));
+              },
             ),
             AssignmentsView(
               model: s,
@@ -182,6 +187,29 @@ class _ImportTab extends StatelessWidget {
           ),
           step('2', 'ブックマーク「単位ハーネスに取り込む」を実行', '未提出の課題を読み込み、自動でこのページに戻ります'),
           ListTile(dense: true, title: Text('最終取り込み: ${formatUpdatedAt(state.manabaSync.lastSuccessAt)}')),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Text(
+              state.roomsFetchedAt == null ? '教室を取り込む(未取得)' : '教室を取り込み直す',
+              style: t.titleSmall?.copyWith(color: cs.primary),
+            ),
+          ),
+          step(
+            '1',
+            'TWINS のメニュー「ダウンロード」を開く',
+            '「kdb_ja.xlsx」が表示される画面',
+            action: TextButton(onPressed: () => _openTab(_twinsUrl), child: const Text('開く')),
+          ),
+          step('2', 'ブックマーク「単位ハーネスに取り込む」を実行', '科目一覧から教室を読み込み、自動でこのページに戻ります(数秒かかります)'),
+          ListTile(
+            dense: true,
+            title: Text(
+              state.roomsFetchedAt == null
+                  ? '最終取り込み: 未取得'
+                  : '最終取り込み: ${formatUpdatedAt(state.roomsFetchedAt)}(${state.autoRooms.length}科目)',
+            ),
+            subtitle: const Text('個別の教室は、日程で科目をタップして「教室を編集」から設定できます'),
+          ),
           const Divider(height: 32),
           ListTile(
             leading: const Icon(Icons.date_range_outlined),

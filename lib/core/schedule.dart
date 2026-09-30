@@ -91,6 +91,7 @@ List<PlannedNotification> planNotifications({
   required ClassDays cal,
   required Map<String, List<Slot>> slotsByModule,
   required PeriodTimes times,
+  Map<String, String> rooms = const {},
   int windowDays = 14,
   int maxPending = 60,
 }) {
@@ -107,7 +108,7 @@ List<PlannedNotification> planNotifications({
           id: stableId('${dateKey(date)}|${b.code}|${b.firstPeriod}'),
           fireAt: fireAt,
           title: b.name.isEmpty ? b.code : b.name,
-          body: '$leadMinutes分後 $hm 開始（${b.periodLabel}）',
+          body: '$leadMinutes分後 $hm 開始（${b.periodLabel}）${rooms[b.code] == null ? '' : ' ${rooms[b.code]}'}',
           payload: b.code,
         ),
       );

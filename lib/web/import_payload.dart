@@ -5,6 +5,7 @@
 /// JSON:
 ///   TWINS:  {"v":1,"kind":"twins","current":"秋A","tabs":[{"label":"春A","html":"<table class=\"rishu-koma\">…"}]}
 ///   manaba: {"v":1,"kind":"manaba","base":"https://manaba…","html":"<table class=\"stdlist\">…"}
+///   教室:   {"v":1,"kind":"rooms","rooms":{"3A204":["FA01111","GB12345"],…}}(kdb_ja.xlsx から。教室ごとにまとめて小さくする)
 /// HTML の解析はアプリ側のパーサー(ゴールデンテスト済み)で行う。
 library;
 
@@ -12,6 +13,7 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 
+import '../core/kdb_rooms.dart';
 import '../core/models.dart';
 import '../core/parsers.dart';
 
@@ -30,6 +32,12 @@ class TwinsImport extends ImportResult {
 class ManabaImport extends ImportResult {
   final List<Assignment> items;
   const ManabaImport(this.items);
+}
+
+class RoomsImport extends ImportResult {
+  /// 科目番号 → 教室
+  final Map<String, String> rooms;
+  const RoomsImport(this.rooms);
 }
 
 class ImportException implements Exception {
@@ -99,6 +107,19 @@ ImportResult decodeImport(String value) {
       final items = parseAssignments(j['html'] as String? ?? '', base: base);
       if (items == null) throw const ImportException('課題の表を解析できませんでした');
       return ManabaImport(items);
+    case 'rooms':
+      final grouped = j['rooms'];
+      if (grouped is! Map) throw const ImportException('教室のデータが見つかりませんでした');
+      final rooms = <String, String>{};
+      for (final e in grouped.entries) {
+        final room = normalizeRoom(e.key as String);
+        if (room.isEmpty || e.value is! List) continue;
+        for (final code in e.value as List) {
+          rooms[(code as String).trim()] = room;
+        }
+      }
+      if (rooms.isEmpty) throw const ImportException('教室が1件も見つかりませんでした');
+      return RoomsImport(rooms);
     default:
       throw const ImportException('未対応のデータです');
   }
