@@ -209,7 +209,9 @@
       for (const a of my.doc.querySelectorAll('a[href]')) {
         const href = (a.getAttribute('href') || '').split(/[?#]/)[0];
         if (!/(^|\/)course_\d+$/.test(href)) continue;
-        const name = ((a.getAttribute('title') || '').trim() || a.textContent.trim());
+        const img = a.querySelector('img');
+        const name = [a.getAttribute('title'), a.textContent, img && img.getAttribute('alt'), img && img.getAttribute('title')]
+          .map((x) => (x || '').trim()).find(Boolean);
         if (name && !(name in courses)) courses[name] = href;
       }
     } catch (e) { /* コース一覧は任意 */ }

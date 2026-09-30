@@ -82,7 +82,13 @@ class WebState extends ChangeNotifier with RoomsState, ManabaCoursesState implem
         await saveManabaCourses(r.courses);
         await store.saveSync(Source.manaba, now);
         notifyListeners();
-        return '未提出の課題を取り込みました(${r.items.length}件)';
+        final names = {
+          for (final xs in timetable.values)
+            for (final s in xs) s.name,
+        };
+        final matched = names.where((n) => manabaUrlFor(n) != null).length;
+        return '未提出の課題を取り込みました(${r.items.length}件)。manaba のコース ${r.courses.length}件'
+            '${names.isEmpty ? '' : '(時間割の科目と一致 $matched件)'}';
       case RoomsImport():
         // 時間割があれば自分の科目だけ保存する(無ければいったん全部。表示は時間割の科目だけ)
         final codes = courseCodes;

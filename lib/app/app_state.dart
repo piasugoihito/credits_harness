@@ -122,6 +122,11 @@ class AppState extends ChangeNotifier with RoomsState, ManabaCoursesState implem
         assignments = items;
         await store.saveAssignments(assignments);
         await saveManabaCourses(courses);
+        final names = {
+          for (final xs in timetable.values)
+            for (final s in xs) s.name,
+        };
+        _log('manaba: 時間割の科目 ${names.length}件中 ${names.where((n) => manabaUrlFor(n) != null).length}件がコースと一致');
       });
     }
   }

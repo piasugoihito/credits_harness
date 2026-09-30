@@ -37,25 +37,23 @@ Element? _closest(Element e, String tag) {
 }
 
 /// TWINS「履修登録・登録状況照会」の時間割表 → コマ一覧(曜日・時限・科目番号順)。
+///
+/// 登録済みのマスは2通りある:
+/// - 取消できる期間: 科目番号が `DeleteCallA('年度','?','科目番号','曜日','時限')` のリンク → 引数から読む
+/// - 授業が始まり取消できなくなった後: リンクが無く文字だけ → 表の位置(行=時限, 列=曜日)とマスの文字から読む
 List<Slot>? parseTimetable(String htmlText) {
   // 内側の表は rishu-koma-inner なので、クラス完全一致の外側の表だけを拾う。
   final table = hp.parse(htmlText).querySelector('table.rishu-koma');
   if (table == null) return null;
 
   final byKey = <String, Slot>{};
+  String? pageYear;
   for (final a in table.querySelectorAll('a')) {
     final m = _deleteRe.firstMatch(a.attributes['onclick'] ?? '');
     if (m == null) continue; // 未登録コマ(InputCallA)は無視
     final td = _closest(a, 'td');
     if (td == null) continue;
-    final raw = <String>[];
-    _texts(td, raw);
-    // 行: [科目番号, 科目名, 教員...]
-    final lines = raw
-        .expand((s) => s.split('\n'))
-        .map((s) => s.trim())
-        .where((s) => s.isNotEmpty && !s.contains('シラバス'))
-        .toList();
+    final lines = _cellLines(td);
     final slot = Slot(
       year: m[1]!,
       code: m[3]!,
@@ -64,13 +62,54 @@ List<Slot>? parseTimetable(String htmlText) {
       day: int.parse(m[4]!),
       period: int.parse(m[5]!),
     );
+    pageYear ??= slot.year;
     byKey['${slot.day}|${slot.period}|${slot.code}'] = slot;
   }
+
+  // 取消リンクの無い登録済みマス(授業開始後のモジュール)を表の位置から読む
+  final body = table.children.where((c) => c.localName == 'tbody').firstOrNull ?? table;
+  for (final tr in body.children.where((c) => c.localName == 'tr')) {
+    final tds = tr.children.where((c) => c.localName == 'td').toList();
+    if (tds.length < 2) continue;
+    final pm = _periodHeadRe.firstMatch(_strippedText(tds.first));
+    if (pm == null) continue; // 曜日の見出し行など
+    final period = int.parse(pm[1]!);
+    for (var i = 1; i < tds.length && i <= 7; i++) {
+      final cell = tds[i];
+      if (cell.querySelectorAll('a').any((a) => _deleteRe.hasMatch(a.attributes['onclick'] ?? ''))) continue;
+      final lines = _cellLines(cell).where((l) => l != '未登録').toList();
+      if (lines.length < 2 || !_courseCodeRe.hasMatch(lines[0])) continue;
+      final slot = Slot(
+        year: pageYear ?? '',
+        code: lines[0],
+        name: lines[1],
+        teacher: lines.length > 2 ? lines.sublist(2).join('、') : '',
+        day: i,
+        period: period,
+      );
+      byKey.putIfAbsent('${slot.day}|${slot.period}|${slot.code}', () => slot);
+    }
+  }
+
   return byKey.values.toList()..sort((a, b) {
     if (a.day != b.day) return a.day - b.day;
     if (a.period != b.period) return a.period - b.period;
     return a.code.compareTo(b.code);
   });
+}
+
+final _periodHeadRe = RegExp(r'^(\d)限$');
+final _courseCodeRe = RegExp(r'^[0-9A-Za-z]{5,10}$');
+
+/// マスの文字を行に分ける: [科目番号, 科目名, 教員...](「シラバス」の行は除く)。
+List<String> _cellLines(Element td) {
+  final raw = <String>[];
+  _texts(td, raw);
+  return raw
+      .expand((s) => s.split('\n'))
+      .map((s) => s.trim())
+      .where((s) => s.isNotEmpty && !s.contains('シラバス'))
+      .toList();
 }
 
 /// TWINS の学期タブ(選択中のタブはリンクを持たない)。
@@ -187,7 +226,14 @@ Map<String, String> parseManabaCourses(String htmlText, {Uri? base}) {
   for (final a in hp.parse(htmlText).querySelectorAll('a[href]')) {
     final href = (a.attributes['href'] ?? '').split('?').first.split('#').first;
     if (!_courseHrefRe.hasMatch(href)) continue;
-    final name = (a.attributes['title'] ?? '').trim().isNotEmpty ? a.attributes['title']!.trim() : _strippedText(a);
+    // 名前: title → リンクの文字 → 画像の alt/title(サムネイル表示)の順
+    final img = a.querySelector('img');
+    final name = [
+      a.attributes['title'],
+      _strippedText(a),
+      img?.attributes['alt'],
+      img?.attributes['title'],
+    ].map((x) => (x ?? '').trim()).firstWhere((x) => x.isNotEmpty, orElse: () => '');
     if (name.isEmpty) continue;
     out.putIfAbsent(name, () => b.resolve(href).toString());
   }

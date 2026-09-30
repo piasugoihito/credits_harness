@@ -24,6 +24,27 @@ void main() {
       expect(parseTimetable('<html><body><p>ログイン</p></body></html>'), isNull);
     });
 
+    test('授業開始後(取消リンクが無い)でも、表の位置と文字から同じコマを読む', () {
+      // 取消リンクを外して文字だけにする(授業が始まったモジュールの表示を想定)
+      final locked = html.replaceAllMapped(
+        RegExp(r'<a href="" onclick="return DeleteCallA\([^)]*\)">([\s\S]*?)</a>'),
+        (m) => m[1]!,
+      );
+      expect(locked.contains('DeleteCallA'), isFalse);
+      final slots = parseTimetable(locked)!;
+      final expectedSlots = (expected['slots'] as List).map((e) => {...(e as Map), 'year': ''}).toList();
+      expect(slots.map((s) => s.toJson()).toList(), expectedSlots);
+    });
+
+    test('取消リンクのあるマスと無いマスが混在しても両方読む(年度はリンクから補う)', () {
+      final mixed = html.replaceAllMapped(
+        RegExp(r'<a href="" onclick="return DeleteCallA\([^)]*ZZ10005[^)]*\)">([\s\S]*?)</a>'),
+        (m) => m[1]!,
+      );
+      final slots = parseTimetable(mixed)!;
+      expect(slots.map((s) => s.toJson()).toList(), expected['slots']);
+    });
+
     test('内側の表(rishu-koma-inner)だけでは表とみなさない', () {
       expect(parseTimetable('<table class="rishu-koma-inner"><tr><td></td></tr></table>'), isNull);
     });
@@ -77,6 +98,7 @@ void main() {
       <a href="course_4117498_report_123" title="レポート">x</a>
       <a href="home_library_query">未提出</a>
       <a href="https://manaba.tsukuba.ac.jp/ct/course_4000002?x=1" title=" 英語 A ">英語</a>
+      <a href="course_4000003"><img src="x.png" alt="サンプル実験"></a>
     </div>''';
 
     test('course_数字 のリンクだけを 名前→URL にする', () {
@@ -84,6 +106,7 @@ void main() {
         'サンプル科目α': 'https://manaba.tsukuba.ac.jp/ct/course_4117498',
         'サンプル演習（基礎）': 'https://manaba.tsukuba.ac.jp/ct/course_4000001',
         '英語 A': 'https://manaba.tsukuba.ac.jp/ct/course_4000002',
+        'サンプル実験': 'https://manaba.tsukuba.ac.jp/ct/course_4000003',
       });
     });
 
