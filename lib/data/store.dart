@@ -154,6 +154,14 @@ class Store {
 
   Future<void> saveRoomsFetchedAt(DateTime t) => _p.setString('rooms_fetched_at', t.toIso8601String());
 
+  // ---- manaba のコース一覧(コース名 → URL)
+  Map<String, String> loadManabaCourses() {
+    final raw = _p.getString('manaba_courses');
+    return raw == null ? {} : (jsonDecode(raw) as Map).cast<String, String>();
+  }
+
+  Future<void> saveManabaCourses(Map<String, String> courses) => _p.setString('manaba_courses', jsonEncode(courses));
+
   // ---- 同期状態
   SyncState loadSync(Source s) {
     final raw = _p.getString('sync_${s.name}');
@@ -172,6 +180,7 @@ class Store {
       'sync_manaba',
       'rooms_auto',
       'rooms_fetched_at',
+      'manaba_courses',
     ]) {
       await _p.remove(k);
     }

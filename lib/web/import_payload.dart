@@ -4,7 +4,8 @@
 ///   方式 z = JSON を zlib 圧縮(CompressionStream('deflate'))、j = 無圧縮 JSON。
 /// JSON:
 ///   TWINS:  {"v":1,"kind":"twins","current":"秋A","tabs":[{"label":"春A","html":"<table class=\"rishu-koma\">…"}]}
-///   manaba: {"v":1,"kind":"manaba","base":"https://manaba…","html":"<table class=\"stdlist\">…"}
+///   manaba: {"v":1,"kind":"manaba","base":"https://manaba…","html":"<table class=\"stdlist\">…",
+///            "courses":{"コース名":"course_4117498",…}}(courses はマイページのコース一覧。無くてもよい)
 ///   教室:   {"v":1,"kind":"rooms","rooms":{"3A204":["FA01111","GB12345"],…}}(kdb_ja.xlsx から。教室ごとにまとめて小さくする)
 /// HTML の解析はアプリ側のパーサー(ゴールデンテスト済み)で行う。
 library;
@@ -31,7 +32,10 @@ class TwinsImport extends ImportResult {
 
 class ManabaImport extends ImportResult {
   final List<Assignment> items;
-  const ManabaImport(this.items);
+
+  /// コース名 → コースURL(取り込みに含まれていなければ空)
+  final Map<String, String> courses;
+  const ManabaImport(this.items, [this.courses = const {}]);
 }
 
 class RoomsImport extends ImportResult {
@@ -106,7 +110,20 @@ ImportResult decodeImport(String value) {
       final base = Uri.tryParse(j['base'] as String? ?? '');
       final items = parseAssignments(j['html'] as String? ?? '', base: base);
       if (items == null) throw const ImportException('課題の表を解析できませんでした');
-      return ManabaImport(items);
+      // コース一覧はリンクの形を検証し直してから使う
+      final courses = <String, String>{};
+      final raw = j['courses'];
+      if (raw is Map) {
+        final links = raw.entries
+            .where((e) => e.key is String && e.value is String)
+            .map(
+              (e) =>
+                  '<a href="${htmlEscape.convert(e.value as String)}" title="${htmlEscape.convert(e.key as String)}"></a>',
+            )
+            .join();
+        courses.addAll(parseManabaCourses(links, base: Uri.parse('https://manaba.tsukuba.ac.jp/ct/home')));
+      }
+      return ManabaImport(items, courses);
     case 'rooms':
       final grouped = j['rooms'];
       if (grouped is! Map) throw const ImportException('教室のデータが見つかりませんでした');

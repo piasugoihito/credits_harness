@@ -1,4 +1,4 @@
-/// 科目の詳細(ボトムシート)。シラバスの開き方は呼び出し側(Android: アプリ内 KdB / Web: 新しいタブ)が決める。
+/// 科目の詳細(ボトムシート)。シラバス・manaba の開き方は呼び出し側(Android: アプリ内 / Web: 新しいタブ)が決める。
 library;
 
 import 'package:flutter/material.dart';
@@ -7,12 +7,14 @@ import '../app/courses_model.dart';
 import '../core/models.dart';
 
 typedef OpenSyllabus = void Function(BuildContext context, String code, String name);
+typedef OpenManaba = void Function(BuildContext context, Uri url, String name);
 
 Future<void> showCourseSheet(
   BuildContext context,
   CoursesModel model,
   String code, {
   required OpenSyllabus openSyllabus,
+  required OpenManaba openManaba,
   String syllabusLabel = 'シラバスを見る(KdB)',
 }) {
   final info = model.courseInfo(code);
@@ -28,7 +30,24 @@ Future<void> showCourseSheet(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(info.name, style: t.titleLarge),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: Text(info.name, style: t.titleLarge)),
+                  if (model.manabaUrlFor(info.name) case final url?)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.open_in_new, size: 18),
+                        label: const Text('manaba'),
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          openManaba(context, Uri.parse(url), info.name);
+                        },
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(height: 4),
               Text(code, style: t.bodyMedium?.copyWith(color: Theme.of(ctx).colorScheme.onSurfaceVariant)),
               if (info.teacher.isNotEmpty) ...[

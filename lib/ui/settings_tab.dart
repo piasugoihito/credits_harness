@@ -12,7 +12,7 @@ import '../m0/spike_page.dart';
 import '../notify/notifier.dart';
 import 'format.dart';
 
-const appVersion = '0.2.0';
+const appVersion = '0.3.0';
 
 const disclaimerText =
     '本アプリは筑波大学とは無関係の非公式アプリです。利用は自己責任でお願いします。'

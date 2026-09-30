@@ -129,7 +129,8 @@ Future<TimetableResult> fetchTimetable(CredentialStore store, {required Log log}
 }
 
 /// manaba の未提出課題一覧を取得する。
-Future<List<Assignment>> fetchAssignments(CredentialStore store, {required Log log}) async {
+/// 戻り値: 未提出課題と、manaba のコース一覧(コース名 → URL。取れなければ空)。
+Future<(List<Assignment>, Map<String, String>)> fetchAssignments(CredentialStore store, {required Log log}) async {
   final s = await WebSession.open(manabaUrl, log: log);
   try {
     final btn = "!!document.querySelector('img[alt=\"$_unsubmittedAlt\"]')";
@@ -142,7 +143,20 @@ Future<List<Assignment>> fetchAssignments(CredentialStore store, {required Log l
     final items = parseAssignments(await s.html(), base: await s.currentUrl());
     if (items == null) throw const ScrapeException(FailureKind.structureChanged, '課題表を解析できません');
     log('manaba: 未提出 ${items.length}件');
-    return items;
+
+    // 科目の詳細から manaba のコースページを開けるよう、マイページのコース一覧も読む(失敗しても課題は返す)
+    var courses = <String, String>{};
+    try {
+      final home = await s.jsAsync(r'''
+        const res = await fetch('/ct/home', { credentials: 'include' });
+        return res.ok ? await res.text() : null;
+      ''');
+      if (home is String) courses = parseManabaCourses(home);
+      log('manaba: コース一覧 ${courses.length}件');
+    } catch (e) {
+      log('manaba: コース一覧を取得できませんでした(${e.runtimeType})');
+    }
+    return (items, courses);
   } finally {
     await s.dispose();
   }

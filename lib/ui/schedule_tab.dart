@@ -9,9 +9,19 @@ import 'course_sheet.dart';
 import 'kdb_syllabus.dart';
 import 'status_banner.dart';
 import 'views/schedule_view.dart';
+import 'web_page.dart';
 
-void showNativeCourseSheet(BuildContext context, AppState app, String code) =>
-    showCourseSheet(context, app, code, openSyllabus: openSyllabusInApp);
+void showNativeCourseSheet(BuildContext context, AppState app, String code) => showCourseSheet(
+  context,
+  app,
+  code,
+  openSyllabus: openSyllabusInApp,
+  openManaba: (ctx, url, name) => Navigator.of(ctx).push(
+    MaterialPageRoute<void>(
+      builder: (_) => WebPage(url: url, title: name, autoLogin: app.credentials),
+    ),
+  ),
+);
 
 class ScheduleTab extends StatelessWidget {
   final AppState app;

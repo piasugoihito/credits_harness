@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../core/calendar.dart';
 import '../core/models.dart';
+import '../core/parsers.dart' show findManabaCourse;
 import '../core/schedule.dart';
 import '../data/store.dart';
 
@@ -30,6 +31,25 @@ abstract interface class CoursesModel implements Listenable {
 
   /// 手動の教室を設定する。null または空文字なら手動設定を消して自動取得の値に戻す。
   Future<void> setManualRoom(String code, String? room);
+
+  /// manaba のコース一覧(コース名 → URL)。manaba の取得/取り込み時に更新。
+  Map<String, String> get manabaCourses;
+}
+
+/// manaba のコース一覧の保持(Android・Web 共通)。
+mixin ManabaCoursesState on ChangeNotifier implements CoursesModel {
+  Store get store;
+
+  @override
+  late Map<String, String> manabaCourses = store.loadManabaCourses();
+
+  /// 1件以上あるときだけ置き換える(取得に失敗した・一覧が空のときは前回の一覧を残す)。
+  Future<void> saveManabaCourses(Map<String, String> courses) async {
+    if (courses.isEmpty) return;
+    manabaCourses = courses;
+    await store.saveManabaCourses(courses);
+    notifyListeners();
+  }
 }
 
 /// 教室の保持と手動設定(Android・Web 共通)。
@@ -80,6 +100,9 @@ extension CoursesModelX on CoursesModel {
 
   /// 表示で使う全科目の教室(手動 > 自動)。
   Map<String, String> get rooms => {...autoRooms, ...manualRooms};
+
+  /// 科目名に対応する manaba のコースページ。見つからなければ null。
+  String? manabaUrlFor(String courseName) => findManabaCourse(manabaCourses, courseName);
 
   /// 時間割にある科目番号の一覧。
   Set<String> get courseCodes => {

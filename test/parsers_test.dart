@@ -67,4 +67,33 @@ void main() {
       expect(cleanSyllabusText(' a \r\n\n\n\nb  \n'), 'a\n\nb');
     });
   });
+
+  group('manaba のコース一覧', () {
+    // 架空データ(実際の /ct/home のリンクの形を模したもの)
+    const html = '''<div>
+      <a href="course_4117498" title="サンプル科目α">サンプル科目α</a>
+      <a href="course_4117498">サンプル科目α</a>
+      <a href="course_4000001"><span>サンプル演習（基礎）</span></a>
+      <a href="course_4117498_report_123" title="レポート">x</a>
+      <a href="home_library_query">未提出</a>
+      <a href="https://manaba.tsukuba.ac.jp/ct/course_4000002?x=1" title=" 英語 A ">英語</a>
+    </div>''';
+
+    test('course_数字 のリンクだけを 名前→URL にする', () {
+      expect(parseManabaCourses(html), {
+        'サンプル科目α': 'https://manaba.tsukuba.ac.jp/ct/course_4117498',
+        'サンプル演習（基礎）': 'https://manaba.tsukuba.ac.jp/ct/course_4000001',
+        '英語 A': 'https://manaba.tsukuba.ac.jp/ct/course_4000002',
+      });
+    });
+
+    test('全角/半角・空白の違いを無視して照合し、部分一致はしない', () {
+      final c = parseManabaCourses(html);
+      expect(findManabaCourse(c, 'サンプル演習(基礎)'), 'https://manaba.tsukuba.ac.jp/ct/course_4000001');
+      expect(findManabaCourse(c, 'ｻﾝﾌﾟﾙ科目α'), isNull, reason: '半角カナまでは変換しない');
+      expect(findManabaCourse(c, '英語Ａ'), 'https://manaba.tsukuba.ac.jp/ct/course_4000002');
+      expect(findManabaCourse(c, 'サンプル科目'), isNull);
+      expect(findManabaCourse(c, ''), isNull);
+    });
+  });
 }

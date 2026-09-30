@@ -174,3 +174,47 @@ Map<String, String> splitSyllabusSections(String text) {
       if (e.value.any((x) => x.trim().isNotEmpty)) e.key: cleanSyllabusText(e.value.join('\n')),
   };
 }
+
+// ---------------------------------------------------------------- manaba のコース一覧(/ct/home)
+
+final _courseHrefRe = RegExp(r'(^|/)(course_\d+)$');
+
+/// manaba「マイページ」(/ct/home)のコースへのリンク → {コース名: コースURL}。
+/// `<a href="course_4117498" title="科目名">` の形(title が無ければリンクの文字)。
+Map<String, String> parseManabaCourses(String htmlText, {Uri? base}) {
+  final b = base ?? Uri.parse('https://manaba.tsukuba.ac.jp/ct/home');
+  final out = <String, String>{};
+  for (final a in hp.parse(htmlText).querySelectorAll('a[href]')) {
+    final href = (a.attributes['href'] ?? '').split('?').first.split('#').first;
+    if (!_courseHrefRe.hasMatch(href)) continue;
+    final name = (a.attributes['title'] ?? '').trim().isNotEmpty ? a.attributes['title']!.trim() : _strippedText(a);
+    if (name.isEmpty) continue;
+    out.putIfAbsent(name, () => b.resolve(href).toString());
+  }
+  return out;
+}
+
+/// 科目名の照合用: 全角英数記号を半角に、空白を除き、小文字にする(TWINS と manaba の表記ゆれ対策)。
+String normalizeCourseName(String s) {
+  final buf = StringBuffer();
+  for (final r in s.runes) {
+    if (r >= 0xFF01 && r <= 0xFF5E) {
+      buf.writeCharCode(r - 0xFEE0);
+    } else if (r == 0x3000 || r == 0x20 || r == 0x09 || r == 0x0A || r == 0x0D) {
+      continue;
+    } else {
+      buf.writeCharCode(r);
+    }
+  }
+  return buf.toString().toLowerCase();
+}
+
+/// TWINS の科目名 name に対応する manaba のコース URL。完全一致(表記ゆれを除く)が無ければ null。
+String? findManabaCourse(Map<String, String> courses, String name) {
+  final key = normalizeCourseName(name);
+  if (key.isEmpty) return null;
+  for (final e in courses.entries) {
+    if (normalizeCourseName(e.key) == key) return e.value;
+  }
+  return null;
+}

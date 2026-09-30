@@ -14,7 +14,7 @@ import '../core/models.dart';
 import '../data/store.dart';
 import 'import_payload.dart';
 
-class WebState extends ChangeNotifier with RoomsState implements CoursesModel {
+class WebState extends ChangeNotifier with RoomsState, ManabaCoursesState implements CoursesModel {
   @override
   final Store store;
   @override
@@ -79,6 +79,7 @@ class WebState extends ChangeNotifier with RoomsState implements CoursesModel {
         assignments = r.items;
         manabaSync = now;
         await store.saveAssignments(assignments);
+        await saveManabaCourses(r.courses);
         await store.saveSync(Source.manaba, now);
         notifyListeners();
         return '未提出の課題を取り込みました(${r.items.length}件)';
@@ -111,6 +112,7 @@ class WebState extends ChangeNotifier with RoomsState implements CoursesModel {
     twinsSync = const SyncState();
     manabaSync = const SyncState();
     resetRooms();
+    manabaCourses = {};
     notifyListeners();
   }
 }

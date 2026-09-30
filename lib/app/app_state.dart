@@ -19,7 +19,7 @@ import '../scraper/scrapers.dart' hide fetchRooms;
 import '../scraper/scrapers.dart' as scrapers show fetchRooms;
 import '../scraper/web_session.dart';
 
-class AppState extends ChangeNotifier with RoomsState implements CoursesModel {
+class AppState extends ChangeNotifier with RoomsState, ManabaCoursesState implements CoursesModel {
   @override
   final Store store;
   final CredentialStore credentials;
@@ -118,8 +118,10 @@ class AppState extends ChangeNotifier with RoomsState implements CoursesModel {
       refreshingSource = Source.manaba;
       notifyListeners();
       await _guarded(Source.manaba, () async {
-        assignments = await fetchAssignments(credentials, log: _log);
+        final (items, courses) = await fetchAssignments(credentials, log: _log);
+        assignments = items;
         await store.saveAssignments(assignments);
+        await saveManabaCourses(courses);
       });
     }
   }
@@ -273,6 +275,7 @@ class AppState extends ChangeNotifier with RoomsState implements CoursesModel {
     hasCredentials = false;
     autofillFailed = false;
     resetRooms();
+    manabaCourses = {};
     roomsError = null;
     log.clear();
     notifyListeners();

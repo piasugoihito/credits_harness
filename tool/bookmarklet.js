@@ -202,7 +202,18 @@
     const list = await getDoc(new URL(link.getAttribute('href'), home.url).href);
     const table = list.doc.querySelector('table.stdlist');
     if (!table) throw new Error('課題の表が見つかりません');
-    return { v: V, kind: 'manaba', base: list.url, html: table.outerHTML };
+    /* 科目の詳細から manaba のコースを開けるよう、マイページのコース一覧(名前とリンクだけ)も渡す。失敗しても課題は渡す */
+    const courses = {};
+    try {
+      const my = await getDoc('/ct/home');
+      for (const a of my.doc.querySelectorAll('a[href]')) {
+        const href = (a.getAttribute('href') || '').split(/[?#]/)[0];
+        if (!/(^|\/)course_\d+$/.test(href)) continue;
+        const name = ((a.getAttribute('title') || '').trim() || a.textContent.trim());
+        if (name && !(name in courses)) courses[name] = href;
+      }
+    } catch (e) { /* コース一覧は任意 */ }
+    return { v: V, kind: 'manaba', base: list.url, html: table.outerHTML, courses: courses };
   }
 
   try {

@@ -79,6 +79,21 @@ void main() {
     expect(() => decodeImport(_encode({'v': 1, 'kind': 'rooms', 'rooms': {}})), throwsA(isA<ImportException>()));
   });
 
+  test('manaba: コース一覧も受け取り、course_数字 以外のリンクは捨てる', () {
+    final r = decodeImport(
+      _encode({
+        'v': 1,
+        'kind': 'manaba',
+        'html': manabaTable,
+        'courses': {'サンプル科目α': 'course_4117498', '悪い例': 'https://evil.example/x', '"><script>': 'course_1'},
+      }),
+    ) as ManabaImport;
+    expect(r.courses, {
+      'サンプル科目α': 'https://manaba.tsukuba.ac.jp/ct/course_4117498',
+      '"><script>': 'https://manaba.tsukuba.ac.jp/ct/course_1',
+    });
+  });
+
   test('URLエンコードされた値も読める', () {
     final v = _encode({'v': 1, 'kind': 'manaba', 'base': '', 'html': manabaTable});
     expect(decodeImport(Uri.encodeComponent(v)), isA<ManabaImport>());

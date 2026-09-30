@@ -76,8 +76,14 @@ class _WebHomeState extends State<WebHome> {
           children: [
             ScheduleView(
               model: s,
-              onTapCourse: (ctx, code) =>
-                  showCourseSheet(ctx, s, code, openSyllabus: _openSyllabus, syllabusLabel: 'KdBでシラバスを探す(科目番号をコピー)'),
+              onTapCourse: (ctx, code) => showCourseSheet(
+                ctx,
+                s,
+                code,
+                openSyllabus: _openSyllabus,
+                openManaba: (_, url, _) => _openTab(url),
+                syllabusLabel: 'KdBでシラバスを探す(科目番号をコピー)',
+              ),
               emptyText: '時間割がまだありません。\n「取り込み」タブの手順で TWINS から取り込んでください。',
               onFetchRooms: () {
                 setState(() => _tab = 2);
