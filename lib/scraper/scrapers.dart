@@ -102,23 +102,32 @@ Future<TimetableResult> fetchTimetable(CredentialStore store, {required Log log}
     final current = tabs.where((t) => t['selected'] == true).map((t) => t['label'] as String).firstOrNull;
     log('TWINS: タブ ${tabs.map((t) => t['label']).join(' ')} (選択中: ${current ?? 'なし'})');
 
-    final result = <String, List<Slot>>{};
+    // 最初に選択されているタブは、他のタブを開く前にいまの画面から読む
+    // (後で読むと、その時点で表示中の別のタブの表を読んでしまう)
+    final byLabel = <String, List<Slot>>{};
+    if (current != null) {
+      final slots = parseTimetable(await s.html());
+      if (slots == null) throw ScrapeException(FailureKind.structureChanged, '「$current」の時間割表を解析できません');
+      byLabel[current] = slots;
+      log('TWINS: $current ${slots.length}コマ');
+    }
     for (final t in tabs) {
       final label = t['label'] as String;
-      if (t['selected'] != true) {
-        await Future<void>.delayed(const Duration(milliseconds: 600)); // サイト負荷への配慮
-        final sel =
-            "(function(){ const e = document.querySelector('td.rishu-tab-sel'); "
-            "return !!e && e.textContent.trim() === ${jsonEncode(label)} && $hasTable; })()";
-        if (!await s.clickAndWait('TS.clickTab(${jsonEncode(label)})', sel)) {
-          throw ScrapeException(FailureKind.structureChanged, '学期タブ「$label」を開けませんでした');
-        }
+      if (byLabel.containsKey(label)) continue;
+      await Future<void>.delayed(const Duration(milliseconds: 600)); // サイト負荷への配慮
+      final sel =
+          "(function(){ const e = document.querySelector('td.rishu-tab-sel'); "
+          "return !!e && e.textContent.trim() === ${jsonEncode(label)} && $hasTable; })()";
+      if (!await s.clickAndWait('TS.clickTab(${jsonEncode(label)})', sel)) {
+        throw ScrapeException(FailureKind.structureChanged, '学期タブ「$label」を開けませんでした');
       }
       final slots = parseTimetable(await s.html());
       if (slots == null) throw ScrapeException(FailureKind.structureChanged, '「$label」の時間割表を解析できません');
-      result[label] = slots;
+      byLabel[label] = slots;
       log('TWINS: $label ${slots.length}コマ');
     }
+    // タブの並び順で返す
+    final result = {for (final t in tabs) t['label'] as String: byLabel[t['label'] as String] ?? const <Slot>[]};
     if (result.values.every((x) => x.isEmpty)) {
       throw const ScrapeException(FailureKind.structureChanged, '全学期で0コマでした(既存データは上書きしません)');
     }
